@@ -12,13 +12,13 @@ class Game:
 
   # ターンを交代
   def switch_turn(self) -> None:
-    self.turn *= -1
+    self.turn = self.turn.flip_stone()
 
   # ゲーム終了
   def is_game_over(self) -> bool:
     return (
         len(self.board.get_placeable_cells(self.turn)) == 0
-        and len(self.board.get_placeable_cells(-self.turn)) == 0
+        and len(self.board.get_placeable_cells(self.turn.flip_stone())) == 0
     )
 
   # ゲーム進行

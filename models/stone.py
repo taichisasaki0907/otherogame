@@ -6,6 +6,13 @@ class Stone(IntEnum):
     EMPTY = 0
     BLACK = 1
 
+    # 反転したコマを返す関数
+    def flip_stone(self):
+        return Stone(-self)
+
+
+
+
 
 DIRECTIONS = [
     (-1, -1), (-1, 0), (-1, 1),

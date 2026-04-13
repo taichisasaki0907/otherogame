@@ -36,7 +36,7 @@ class Board:
       return 0 <= x < self.size and 0 <= y < self.size
 
     # 置いた時に返せるコマのリストを取得
-    def get_flippable_stones(self, x: int, y: int, stone: int) -> list[tuple[int, int]]:
+    def get_flippable_stones(self, x: int, y: int, stone: Stone) -> list[tuple[int, int]]:
 
       # 盤上でなければ失敗
       if not self.on_board(x, y):
@@ -48,7 +48,7 @@ class Board:
 
       #隣接方向に相手のコマがあり、その先に自分のコマがあるか
 
-      enemy_stone = -stone #相手のコマ
+      enemy_stone = stone.flip_stone() #相手のコマ
 
       flippable_stones = [] # 返せるコマを格納
 
@@ -88,11 +88,11 @@ class Board:
       return flippable_stones
 
     # コマを置けるかを判定
-    def is_placeable(self, x: int, y: int, stone: int) -> bool:
+    def is_placeable(self, x: int, y: int, stone: Stone) -> bool:
       return len(self.get_flippable_stones(x, y, stone)) > 0
 
     # コマ置いてひっくり返す
-    def place_stone(self, x: int, y: int, stone: int) -> bool:
+    def place_stone(self, x: int, y: int, stone: Stone) -> bool:
       flippable_stones = self.get_flippable_stones(x, y, stone)
 
       # 返せるコマがなければ失敗
@@ -104,11 +104,11 @@ class Board:
 
       # 返せるコマを全て反転
       for fx, fy in flippable_stones:
-        self.grid[fy][fx] *= -1
+        self.grid[fy][fx] = self.grid[fy][fx].flip_stone()
       return True
 
     # コマを置ける座標を取得
-    def get_placeable_cells(self, stone: int) -> list[tuple[int, int]]:
+    def get_placeable_cells(self, stone: Stone) -> list[tuple[int, int]]:
       placeable_cells = []
       for y in range(self.size):
         for x in range(self.size):
