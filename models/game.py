@@ -1,18 +1,51 @@
-import random
-
 from .board import Board
 from .stone import Stone
-
+from .player import PlayerProtocol, HumanPlayer, CPUPlayer
 
 #クラス：ゲーム
 class Game:
   def __init__(self) -> None:
     self.board = Board()
     self.turn = Stone.BLACK
+    self.black_player = self.select_black_player()
+    self.white_player = self.select_white_player()
+
+  # 黒プレイヤーを選ぶ
+  def select_black_player(self) -> PlayerProtocol:
+    while True:
+      print("プレイヤー(黒)を選んでください。1: プレイヤー 2: CPU")
+      choice = input()
+
+      if choice == "1":
+          return HumanPlayer("Player1", Stone.BLACK)
+      elif choice == "2":
+          return CPUPlayer("CPU(黒)", Stone.BLACK)
+      else:
+          print("1 か 2 を入力してください")
+
+  # 白プレイヤーを選ぶ
+  def select_white_player(self) -> PlayerProtocol:
+    while True:
+      print("プレイヤー(白)を選んでください。1: プレイヤー 2: CPU")
+      choice = input()
+
+      if choice == "1":
+          return HumanPlayer("Player2", Stone.WHITE)
+      elif choice == "2":
+          return CPUPlayer("CPU(白)", Stone.WHITE)
+      else:
+          print("1 か 2 を入力してください")           
+
 
   # ターンを交代
   def switch_turn(self) -> None:
     self.turn = self.turn.flip_stone()
+
+  # 現在のプレイヤー
+  def get_current_player(self) -> PlayerProtocol:
+    if self.turn == Stone.BLACK:
+        return self.black_player
+    return self.white_player
 
   # ゲーム終了
   def is_game_over(self) -> bool:
@@ -44,29 +77,20 @@ class Game:
       # コマをおける座標を表示
       print(f"置ける場所: {self.board.get_placeable_cells(self.turn)}")
 
-      # CPUのターンならランダムにコマを置く
-      if self.turn == Stone.WHITE:
-        move = self.get_random_cpu_move()
+      # 現在のプレイヤー
+      current_player = self.get_current_player()
 
-        if move is not None:
-          x, y = move
-          self.board.place_stone(x, y, self.turn)
-          print(f"CPUは ({x}, {y}) に置いた")
-          self.switch_turn()
-          continue
+      while True:
+        # プレイヤーの手を取得
+        x, y = current_player.choose_move(self.board)
 
-      # コマを置かせる
-      try:
-        x = int(input("x: "))
-        y = int(input("y: "))
-      except ValueError:
-        print("整数を入力してください")
-        continue
-
-      if self.board.place_stone(x, y, self.turn):
-        self.switch_turn()
-      else:
-        print("そこには置けない")
+        if self.board.place_stone(x, y, self.turn):
+            print(f"({x}, {y})に置いた")
+            self.switch_turn()
+            break
+        else:
+            print("そこには置けない")
+      
 
     self.board.display()
     self.display_result()
@@ -93,12 +117,7 @@ class Game:
     else:
       print("引き分け")
 
-  # ランダムに次の手を決める(CPU)
-  def get_random_cpu_move(self) -> tuple[int, int] | None:
-    placeable_cells = self.board.get_placeable_cells(self.turn)
-    if len(placeable_cells) == 0:
-      return None
-    return random.choice(placeable_cells)
+  
 
 
 
