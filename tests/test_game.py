@@ -10,13 +10,17 @@ def test_switch_turn():
 def test_is_game_over():
     game = Game()
     assert game.is_game_over() is False
-    game.board.grid = [[Stone.BLACK for _ in range(game.board.size)] for _ in range(game.board.size)]
+    for y in range(game.board.size):
+        for x in range(game.board.size):
+            game.board.set_cell(x, y, Stone.BLACK)
     assert game.is_game_over() is True
 
 
 def test_display_result_black_win(capsys):
     game = Game()
-    game.board.grid = [[Stone.BLACK for _ in range(game.board.size)] for _ in range(game.board.size)]
+    for y in range(game.board.size):
+        for x in range(game.board.size):
+            game.board.set_cell(x, y, Stone.BLACK)
     game.display_result()
     output = capsys.readouterr().out
     assert "黒の得点: 64" in output
@@ -25,7 +29,9 @@ def test_display_result_black_win(capsys):
 
 def test_display_result_white_win(capsys):
     game = Game()
-    game.board.grid = [[Stone.WHITE for _ in range(game.board.size)] for _ in range(game.board.size)]
+    for y in range(game.board.size):
+        for x in range(game.board.size):
+            game.board.set_cell(x, y, Stone.WHITE)
     game.display_result()
     output = capsys.readouterr().out
     assert "黒の得点: 0" in output
@@ -40,10 +46,4 @@ def test_display_result_draw(capsys):
     assert "白の得点: 2" in output
     assert "引き分け" in output
 
-def test_get_random_cpu_move():
-    game = Game()
-    game.turn = Stone.WHITE
 
-    move = game.get_random_cpu_move()
-
-    assert move in [(4, 2), (5, 3), (2, 4), (3, 5)]

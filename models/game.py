@@ -7,9 +7,8 @@ class Game:
   def __init__(self) -> None:
     self.board = Board()
     self.turn = Stone.BLACK
-    self.black_player = self.select_black_player()
-    self.white_player = self.select_white_player()
-
+    self.black_player = None
+    self.white_player = None
   # 黒プレイヤーを選ぶ
   def select_black_player(self) -> PlayerProtocol:
     while True:
@@ -56,6 +55,9 @@ class Game:
 
   # ゲーム進行
   def play(self) -> None:
+
+    self.black_player = self.select_black_player()
+    self.white_player = self.select_white_player()
     # ゲームが続いてる限り進行
     while not self.is_game_over():
 

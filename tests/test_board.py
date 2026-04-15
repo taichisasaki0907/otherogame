@@ -33,13 +33,14 @@ def test_get_flippable_stones():
 
 def test_get_flippable_stones_con():
     board = Board()
-    board.grid[0][1] = Stone.WHITE
-    board.grid[0][2] = Stone.WHITE
-    board.grid[0][3] = Stone.WHITE
+    board.set_cell(1, 0, Stone.WHITE)
+    board.set_cell(2, 0, Stone.WHITE)
+    board.set_cell(3, 0, Stone.WHITE)
+    
     assert board.get_flippable_stones(4, 0, Stone.BLACK) == []
-    board.grid[0][0] = Stone.WHITE
+    board.set_cell(0, 0, Stone.WHITE)
     assert board.get_flippable_stones(4, 0, Stone.BLACK) == []
-    board.grid[0][0] = Stone.BLACK
+    board.set_cell(0, 0, Stone.BLACK)
     assert board.get_flippable_stones(4, 0, Stone.BLACK) == [(3, 0), (2, 0), (1, 0)]
 
 def test_is_placeable():

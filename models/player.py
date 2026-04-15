@@ -12,7 +12,7 @@ class PlayerProtocol(Protocol):
         ...
 
 class HumanPlayer:
-    def __init__(self, name: str, stone: Stone):
+    def __init__(self, name: str, stone: Stone) -> None:
         self.name = name
         self.stone = stone
 
@@ -26,7 +26,7 @@ class HumanPlayer:
                 print("整数を入力してください")
 
 class CPUPlayer:
-    def __init__(self, name: str, stone: Stone):
+    def __init__(self, name: str, stone: Stone) -> None:
         self.name = name
         self.stone = stone
 

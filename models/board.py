@@ -2,16 +2,25 @@ from .stone import Stone, DIRECTIONS
 
 class Board:
     def __init__(self) -> None:
-      self.size = 8
-      self.grid = [[Stone.EMPTY for _ in range(self.size)] for _ in range(self.size)]
+      self.__size = 8
+      self.__grid = [[Stone.EMPTY for _ in range(self.size)] for _ in range(self.size)]
       self.reset()
+    
+    @property
+    def size(self):
+      return self.__size
+
+    @property
+    def grid(self):
+      return self.__grid
+
 
     # 初期配置
     def reset(self) -> None:
-      self.grid[3][3] = Stone.WHITE
-      self.grid[3][4] = Stone.BLACK
-      self.grid[4][3] = Stone.BLACK
-      self.grid[4][4] = Stone.WHITE
+      self.__grid[3][3] = Stone.WHITE
+      self.__grid[3][4] = Stone.BLACK
+      self.__grid[4][3] = Stone.BLACK
+      self.__grid[4][4] = Stone.WHITE
 
     # 表示
     def display(self) -> None:
@@ -22,9 +31,9 @@ class Board:
       for y in range(self.size):
           print(y, end=" ")
           for x in range(self.size):
-            if self.grid[y][x] == Stone.WHITE:
+            if self.__grid[y][x] == Stone.WHITE:
               print("W", end=" ")
-            elif self.grid[y][x] == Stone.BLACK:
+            elif self.__grid[y][x] == Stone.BLACK:
               print("B", end=" ")
             else:
               print(".", end=" ")
@@ -43,7 +52,7 @@ class Board:
         return []
 
       # 空マスでなければ失敗
-      if self.grid[y][x] != Stone.EMPTY:
+      if self.__grid[y][x] != Stone.EMPTY:
         return []
 
       #隣接方向に相手のコマがあり、その先に自分のコマがあるか
@@ -62,14 +71,14 @@ class Board:
           continue
 
         # 探索方向が相手のコマでなければこの方向を探索終了
-        if self.grid[ny][nx] != enemy_stone:
+        if self.__grid[ny][nx] != enemy_stone:
           continue
 
         # この方向で返せる可能性のあるコマを一時格納
         temp_flippable_stones = []
 
         # 相手のコマが続く限りその方向を探索
-        while self.on_board(nx, ny) and self.grid[ny][nx] == enemy_stone:
+        while self.on_board(nx, ny) and self.__grid[ny][nx] == enemy_stone:
           temp_flippable_stones.append((nx, ny))
           nx += dx
           ny += dy
@@ -81,7 +90,7 @@ class Board:
         # 空マスに当たったらこの方向を探索終了
 
         # 自分のコマに当たったら探索成功
-        if self.grid[ny][nx] == stone:
+        if self.__grid[ny][nx] == stone:
           flippable_stones.extend(temp_flippable_stones)
 
       # 完走
@@ -100,11 +109,11 @@ class Board:
         return False
 
       # コマを置く
-      self.grid[y][x] = stone
+      self.__grid[y][x] = stone
 
       # 返せるコマを全て反転
       for fx, fy in flippable_stones:
-        self.grid[fy][fx] = self.grid[fy][fx].flip_stone()
+        self.__grid[fy][fx] = self.__grid[fy][fx].flip_stone()
       return True
 
     # コマを置ける座標を取得
@@ -115,3 +124,7 @@ class Board:
           if self.is_placeable(x, y, stone):
             placeable_cells.append((x, y))
       return placeable_cells
+
+    # マスの状態を強制的に設定する(デバック用)
+    def set_cell(self, x: int, y: int, stone: Stone) -> None:
+      self.__grid[y][x] = stone
