@@ -31,9 +31,9 @@ class Board:
       for y in range(self.size):
           print(y, end=" ")
           for x in range(self.size):
-            if self.__grid[y][x] == Stone.WHITE:
+            if self.grid[y][x] == Stone.WHITE:
               print("W", end=" ")
-            elif self.__grid[y][x] == Stone.BLACK:
+            elif self.grid[y][x] == Stone.BLACK:
               print("B", end=" ")
             else:
               print(".", end=" ")
@@ -71,14 +71,14 @@ class Board:
           continue
 
         # 探索方向が相手のコマでなければこの方向を探索終了
-        if self.__grid[ny][nx] != enemy_stone:
+        if self.grid[ny][nx] != enemy_stone:
           continue
 
         # この方向で返せる可能性のあるコマを一時格納
         temp_flippable_stones = []
 
         # 相手のコマが続く限りその方向を探索
-        while self.on_board(nx, ny) and self.__grid[ny][nx] == enemy_stone:
+        while self.on_board(nx, ny) and self.grid[ny][nx] == enemy_stone:
           temp_flippable_stones.append((nx, ny))
           nx += dx
           ny += dy
@@ -90,7 +90,7 @@ class Board:
         # 空マスに当たったらこの方向を探索終了
 
         # 自分のコマに当たったら探索成功
-        if self.__grid[ny][nx] == stone:
+        if self.grid[ny][nx] == stone:
           flippable_stones.extend(temp_flippable_stones)
 
       # 完走
@@ -125,6 +125,6 @@ class Board:
             placeable_cells.append((x, y))
       return placeable_cells
 
-    # マスの状態を強制的に設定する(デバック用)
+    # マスの状態を強制的に設定する(テスト用)
     def set_cell(self, x: int, y: int, stone: Stone) -> None:
       self.__grid[y][x] = stone

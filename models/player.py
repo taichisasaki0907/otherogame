@@ -13,8 +13,15 @@ class PlayerProtocol(Protocol):
 
 class HumanPlayer:
     def __init__(self, name: str, stone: Stone) -> None:
-        self.name = name
-        self.stone = stone
+        self.__name = name
+        self.__stone = stone
+
+    @property
+    def name(self) -> str:
+        return self.__name
+    @property
+    def stone(self) -> Stone:
+        return self.__stone
 
     def choose_move(self, board: Board) -> tuple[int, int]:
         while True:
@@ -27,8 +34,15 @@ class HumanPlayer:
 
 class CPUPlayer:
     def __init__(self, name: str, stone: Stone) -> None:
-        self.name = name
-        self.stone = stone
+        self.__name = name
+        self.__stone = stone
+
+    @property
+    def name(self) -> str:
+        return self.__name
+    @property
+    def stone(self) -> Stone:
+        return self.__stone
 
     def choose_move(self, board: Board) -> tuple[int, int]:
         placeable_cells = board.get_placeable_cells(self.stone)

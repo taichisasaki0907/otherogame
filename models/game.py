@@ -5,10 +5,19 @@ from .player import PlayerProtocol, HumanPlayer, CPUPlayer
 #クラス：ゲーム
 class Game:
   def __init__(self) -> None:
-    self.board = Board()
-    self.turn = Stone.BLACK
-    self.black_player = None
-    self.white_player = None
+    self.__board = Board()
+    self.__turn = Stone.BLACK
+    self.__black_player = None
+    self.__white_player = None
+
+  @property
+  def board(self):
+     return self.__board
+
+  @property
+  def turn(self):
+     return self.__turn 
+
   # 黒プレイヤーを選ぶ
   def select_black_player(self) -> PlayerProtocol:
     while True:
@@ -38,13 +47,13 @@ class Game:
 
   # ターンを交代
   def switch_turn(self) -> None:
-    self.turn = self.turn.flip_stone()
+    self.__turn = self.__turn.flip_stone()
 
   # 現在のプレイヤー
   def get_current_player(self) -> PlayerProtocol:
     if self.turn == Stone.BLACK:
-        return self.black_player
-    return self.white_player
+        return self.__black_player
+    return self.__white_player
 
   # ゲーム終了
   def is_game_over(self) -> bool:
@@ -56,8 +65,8 @@ class Game:
   # ゲーム進行
   def play(self) -> None:
 
-    self.black_player = self.select_black_player()
-    self.white_player = self.select_white_player()
+    self.__black_player = self.select_black_player()
+    self.__white_player = self.select_white_player()
     # ゲームが続いてる限り進行
     while not self.is_game_over():
 
@@ -86,7 +95,7 @@ class Game:
         # プレイヤーの手を取得
         x, y = current_player.choose_move(self.board)
 
-        if self.board.place_stone(x, y, self.turn):
+        if self.board.place_stone(x, y, self.__turn):
             print(f"({x}, {y})に置いた")
             self.switch_turn()
             break
